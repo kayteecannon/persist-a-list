@@ -7,8 +7,11 @@
 //
 
 import UIKit
+import CoreData
 
 class AddListTableViewController: UITableViewController {
+    
+    let dataController = DataController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,6 +40,19 @@ class AddListTableViewController: UITableViewController {
         return 1
     }
 
+    @IBAction func saveButtonTapped(sender: AnyObject) {
+        
+        
+        self.dismissViewControllerAnimated(true, completion: {})
+
+    }
+    
+    @IBAction func cancelButtonTapped(sender: AnyObject) {
+        
+        self.dismissViewControllerAnimated(true, completion: {})
+        
+    }
+    
     /*
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)

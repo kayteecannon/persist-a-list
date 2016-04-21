@@ -22,8 +22,8 @@
 		ABD7E9A91CC927360005C2EA /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9A51CC927360005C2EA /* Item.swift */; };
 		ABD7E9AA1CC927360005C2EA /* List+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9A61CC927360005C2EA /* List+CoreDataProperties.swift */; };
 		ABD7E9AB1CC927360005C2EA /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9A71CC927360005C2EA /* List.swift */; };
-		ABD7E9AD1CC974570005C2EA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9AC1CC974570005C2EA /* CoreDataStack.swift */; };
 		ABD7E9AF1CC977F10005C2EA /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9AE1CC977F10005C2EA /* DataController.swift */; };
+		ABD7E9B11CC989050005C2EA /* ListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9B01CC989050005C2EA /* ListController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,8 +65,8 @@
 		ABD7E9A51CC927360005C2EA /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		ABD7E9A61CC927360005C2EA /* List+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "List+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		ABD7E9A71CC927360005C2EA /* List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
-		ABD7E9AC1CC974570005C2EA /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		ABD7E9AE1CC977F10005C2EA /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		ABD7E9B01CC989050005C2EA /* ListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +123,7 @@
 			children = (
 				ABD7E9591CC912440005C2EA /* AppDelegate.swift */,
 				ABD7E95D1CC912440005C2EA /* Main.storyboard */,
+				ABD7E9B01CC989050005C2EA /* ListController.swift */,
 				ABD7E9971CC91FDE0005C2EA /* AddListTableViewController.swift */,
 				ABD7E9951CC91FCF0005C2EA /* AddItemTableViewController.swift */,
 				ABD7E9931CC91FB60005C2EA /* ListViewController.swift */,
@@ -132,7 +133,6 @@
 				ABD7E9621CC912440005C2EA /* LaunchScreen.storyboard */,
 				ABD7E9651CC912440005C2EA /* Info.plist */,
 				ABD7E9991CC922700005C2EA /* Model.xcdatamodeld */,
-				ABD7E9AC1CC974570005C2EA /* CoreDataStack.swift */,
 			);
 			path = PersistAList;
 			sourceTree = "<group>";
@@ -290,10 +290,10 @@
 				ABD7E9AF1CC977F10005C2EA /* DataController.swift in Sources */,
 				ABD7E9AA1CC927360005C2EA /* List+CoreDataProperties.swift in Sources */,
 				ABD7E9A91CC927360005C2EA /* Item.swift in Sources */,
+				ABD7E9B11CC989050005C2EA /* ListController.swift in Sources */,
 				ABD7E9961CC91FCF0005C2EA /* AddItemTableViewController.swift in Sources */,
 				ABD7E9A81CC927360005C2EA /* Item+CoreDataProperties.swift in Sources */,
 				ABD7E9981CC91FDE0005C2EA /* AddListTableViewController.swift in Sources */,
-				ABD7E9AD1CC974570005C2EA /* CoreDataStack.swift in Sources */,
 				ABD7E9AB1CC927360005C2EA /* List.swift in Sources */,
 				ABD7E99B1CC922700005C2EA /* Model.xcdatamodeld in Sources */,
 				ABD7E95A1CC912440005C2EA /* AppDelegate.swift in Sources */,

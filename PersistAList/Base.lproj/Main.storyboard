@@ -119,7 +119,7 @@
         <!--Add List-->
         <scene sceneID="4mL-Ui-1Fg">
             <objects>
-                <tableViewController id="huf-j4-r0j" sceneMemberID="viewController">
+                <tableViewController id="huf-j4-r0j" customClass="AddListTableViewController" customModule="PersistAList" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="JLC-qG-EAe">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -157,8 +157,16 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Add List" id="4gg-w6-g6W">
-                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="CA8-Vp-DGD"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="FlC-TQ-4en"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="CA8-Vp-DGD">
+                            <connections>
+                                <action selector="cancelButtonTapped:" destination="huf-j4-r0j" id="8pJ-hm-Wdk"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="FlC-TQ-4en">
+                            <connections>
+                                <action selector="saveButtonTapped:" destination="huf-j4-r0j" id="70w-y1-nfM"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mEx-R1-Cvn" userLabel="First Responder" sceneMemberID="firstResponder"/>
