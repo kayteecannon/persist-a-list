@@ -7,11 +7,18 @@
 //
 
 import UIKit
+import CoreData
 
-class MainListTableViewController: UITableViewController {
+class MainListTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+    
+    var coreDataStack: CoreDataStack!
+    
+    var fetchRequest: NSFetchRequest!
+    var lists: [List] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
+   
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -24,28 +31,38 @@ class MainListTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
+    func fetchAndReload() {
+        
+        do {
+            lists = try coreDataStack.context.executeFetchRequest(fetchRequest) as! [List]
+            tableView.reloadData()
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+    }
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        
+        return lists.count
+       
     }
-
-    /*
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
-
-        // Configure the cell...
-
-        return cell
+    
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath)
+        -> UITableViewCell {
+            
+            let cell = tableView.dequeueReusableCellWithIdentifier("mainListCell")!
+            
+            let list = lists[indexPath.row]
+            
+            cell.textLabel?.text = list.name
+            
+            return cell
     }
-    */
+            
+    
 
     /*
     // Override to support conditional editing of the table view.

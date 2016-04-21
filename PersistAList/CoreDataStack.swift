@@ -10,7 +10,7 @@ import CoreData
 
 class CoreDataStack {
     
-    let modelName = "WorldCup"
+    let modelName = "Model"
     
     lazy var context: NSManagedObjectContext = {
         

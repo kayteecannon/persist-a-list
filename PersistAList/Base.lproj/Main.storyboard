@@ -15,7 +15,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="X4T-p3-v4m">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="mainListCell" id="X4T-p3-v4m">
                                 <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="X4T-p3-v4m" id="qKS-f7-P9m">
@@ -35,6 +35,7 @@
                     <navigationItem key="navigationItem" title="Main" id="9eL-wO-kiS">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="OHm-qW-gG4">
                             <connections>
+                                <action selector="addButtonTapped:" destination="35q-dy-KXC" id="ehr-7F-EJB"/>
                                 <segue destination="77h-j5-5CP" kind="presentation" id="4po-U5-UA8"/>
                             </connections>
                         </barButtonItem>
@@ -77,7 +78,7 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="492"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ln4-iQ-sxc">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="itemCell" id="ln4-iQ-sxc">
                                         <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ln4-iQ-sxc" id="MI6-CQ-Kdf">
@@ -86,6 +87,10 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="ssJ-fH-Iaq" id="Zbq-lt-p7R"/>
+                                    <outlet property="delegate" destination="ssJ-fH-Iaq" id="cQE-sg-nFV"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
