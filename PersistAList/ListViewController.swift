@@ -7,11 +7,18 @@
 //
 
 import UIKit
+import CoreData
 
-class ListViewController: UIViewController {
+class ListViewController: UIViewController, NSFetchedResultsControllerDelegate, UITableViewDataSource {
+    
+    var dataController = DataController()
+    
+    var fetchedResultsController: NSFetchedResultsController!
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        initializeFetchedResultsController()
 
         // Do any additional setup after loading the view.
     }
@@ -20,6 +27,48 @@ class ListViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func initializeFetchedResultsController() {
+        let request = NSFetchRequest(entityName: "List")
+        let nameSort = NSSortDescriptor(key: "item.name", ascending: true)
+        request.sortDescriptors = [nameSort]
+        
+        let moc = self.dataController.managedObjectContext
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController.delegate = self
+        
+        do {
+            try fetchedResultsController.performFetch()
+        } catch {
+            fatalError("Failed to initialize FetchedResultsController: \(error)")
+        }
+    }
+    
+    
+    func configureCell(cell: UITableViewCell, indexPath: NSIndexPath) {
+        let item = fetchedResultsController.objectAtIndexPath(indexPath) as! Item
+        // Populate cell from the NSManagedObject instance
+        cell.textLabel!.text = item.name
+        
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("itemCell", forIndexPath: indexPath)
+        // Set up the cell
+        configureCell(cell, indexPath: indexPath)
+        
+        return cell
+    }
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return fetchedResultsController.sections!.count
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let sectionInfo = fetchedResultsController.sections![section]
+        return sectionInfo.numberOfObjects
+    }
+
     
 
     /*
@@ -31,5 +80,17 @@ class ListViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     */
-
+    
+//    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        
+//        
+//        
+//    }
+//    
+//    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+//        
+//        
+//    }
+//    
+   
 }

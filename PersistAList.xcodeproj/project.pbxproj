@@ -13,7 +13,6 @@
 		ABD7E9641CC912440005C2EA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ABD7E9621CC912440005C2EA /* LaunchScreen.storyboard */; };
 		ABD7E96F1CC912440005C2EA /* PersistAListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E96E1CC912440005C2EA /* PersistAListTests.swift */; };
 		ABD7E97A1CC912440005C2EA /* PersistAListUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9791CC912440005C2EA /* PersistAListUITests.swift */; };
-		ABD7E9881CC917930005C2EA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9871CC917930005C2EA /* CoreDataStack.swift */; };
 		ABD7E9921CC919920005C2EA /* MainListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9911CC919920005C2EA /* MainListTableViewController.swift */; };
 		ABD7E9941CC91FB60005C2EA /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9931CC91FB60005C2EA /* ListViewController.swift */; };
 		ABD7E9961CC91FCF0005C2EA /* AddItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9951CC91FCF0005C2EA /* AddItemTableViewController.swift */; };
@@ -23,6 +22,8 @@
 		ABD7E9A91CC927360005C2EA /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9A51CC927360005C2EA /* Item.swift */; };
 		ABD7E9AA1CC927360005C2EA /* List+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9A61CC927360005C2EA /* List+CoreDataProperties.swift */; };
 		ABD7E9AB1CC927360005C2EA /* List.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9A71CC927360005C2EA /* List.swift */; };
+		ABD7E9AD1CC974570005C2EA /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9AC1CC974570005C2EA /* CoreDataStack.swift */; };
+		ABD7E9AF1CC977F10005C2EA /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9AE1CC977F10005C2EA /* DataController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,7 +56,6 @@
 		ABD7E9751CC912440005C2EA /* PersistAListUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PersistAListUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABD7E9791CC912440005C2EA /* PersistAListUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistAListUITests.swift; sourceTree = "<group>"; };
 		ABD7E97B1CC912440005C2EA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		ABD7E9871CC917930005C2EA /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		ABD7E9911CC919920005C2EA /* MainListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainListTableViewController.swift; sourceTree = "<group>"; };
 		ABD7E9931CC91FB60005C2EA /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		ABD7E9951CC91FCF0005C2EA /* AddItemTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddItemTableViewController.swift; sourceTree = "<group>"; };
@@ -65,6 +65,8 @@
 		ABD7E9A51CC927360005C2EA /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		ABD7E9A61CC927360005C2EA /* List+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "List+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		ABD7E9A71CC927360005C2EA /* List.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = List.swift; sourceTree = "<group>"; };
+		ABD7E9AC1CC974570005C2EA /* CoreDataStack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		ABD7E9AE1CC977F10005C2EA /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,11 +127,12 @@
 				ABD7E9951CC91FCF0005C2EA /* AddItemTableViewController.swift */,
 				ABD7E9931CC91FB60005C2EA /* ListViewController.swift */,
 				ABD7E9911CC919920005C2EA /* MainListTableViewController.swift */,
-				ABD7E9871CC917930005C2EA /* CoreDataStack.swift */,
+				ABD7E9AE1CC977F10005C2EA /* DataController.swift */,
 				ABD7E9601CC912440005C2EA /* Assets.xcassets */,
 				ABD7E9621CC912440005C2EA /* LaunchScreen.storyboard */,
 				ABD7E9651CC912440005C2EA /* Info.plist */,
 				ABD7E9991CC922700005C2EA /* Model.xcdatamodeld */,
+				ABD7E9AC1CC974570005C2EA /* CoreDataStack.swift */,
 			);
 			path = PersistAList;
 			sourceTree = "<group>";
@@ -284,16 +287,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				ABD7E9921CC919920005C2EA /* MainListTableViewController.swift in Sources */,
+				ABD7E9AF1CC977F10005C2EA /* DataController.swift in Sources */,
 				ABD7E9AA1CC927360005C2EA /* List+CoreDataProperties.swift in Sources */,
 				ABD7E9A91CC927360005C2EA /* Item.swift in Sources */,
 				ABD7E9961CC91FCF0005C2EA /* AddItemTableViewController.swift in Sources */,
 				ABD7E9A81CC927360005C2EA /* Item+CoreDataProperties.swift in Sources */,
 				ABD7E9981CC91FDE0005C2EA /* AddListTableViewController.swift in Sources */,
+				ABD7E9AD1CC974570005C2EA /* CoreDataStack.swift in Sources */,
 				ABD7E9AB1CC927360005C2EA /* List.swift in Sources */,
 				ABD7E99B1CC922700005C2EA /* Model.xcdatamodeld in Sources */,
 				ABD7E95A1CC912440005C2EA /* AppDelegate.swift in Sources */,
 				ABD7E9941CC91FB60005C2EA /* ListViewController.swift in Sources */,
-				ABD7E9881CC917930005C2EA /* CoreDataStack.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -520,6 +524,7 @@
 				ABD7E9801CC912440005C2EA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		ABD7E9811CC912440005C2EA /* Build configuration list for PBXNativeTarget "PersistAListTests" */ = {
 			isa = XCConfigurationList;
@@ -528,6 +533,7 @@
 				ABD7E9831CC912440005C2EA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		ABD7E9841CC912440005C2EA /* Build configuration list for PBXNativeTarget "PersistAListUITests" */ = {
 			isa = XCConfigurationList;
@@ -536,6 +542,7 @@
 				ABD7E9861CC912440005C2EA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
