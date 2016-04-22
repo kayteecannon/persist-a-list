@@ -13,6 +13,7 @@ class AddListTableViewController: UITableViewController {
     
     let dataController = DataController()
 
+    @IBOutlet weak var nameTextField: UITextField!
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -42,9 +43,23 @@ class AddListTableViewController: UITableViewController {
 
     @IBAction func saveButtonTapped(sender: AnyObject) {
         
+        let moc = dataController.managedObjectContext
         
-        self.dismissViewControllerAnimated(true, completion: {})
-
+        if nameTextField.text != "" {
+            
+            let list = NSEntityDescription.insertNewObjectForEntityForName("List", inManagedObjectContext: moc) as! List
+            
+            list.name = nameTextField.text!
+            
+            do {
+                try moc.save()
+            } catch {
+                fatalError("Failure to save context: \(error)")
+            }
+            
+            self.dismissViewControllerAnimated(true, completion: {})
+        }
+        
     }
     
     @IBAction func cancelButtonTapped(sender: AnyObject) {

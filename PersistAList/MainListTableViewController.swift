@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class MainListTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
+class MainListTableViewController: UITableViewController {
     
     var dataController = DataController()
     
@@ -19,7 +19,9 @@ class MainListTableViewController: UITableViewController, NSFetchedResultsContro
         super.viewDidLoad()
         initializeFetchedResultsController()
         
+        // Do any additional setup after loading the view.
     }
+      
     
     func initializeFetchedResultsController() {
         let request = NSFetchRequest(entityName: "List")
@@ -62,39 +64,38 @@ class MainListTableViewController: UITableViewController, NSFetchedResultsContro
         return sectionInfo.numberOfObjects
     }
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
-        tableView.beginUpdates()
-    }
-    
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
-        switch type {
-        case .Insert:
-            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        case .Delete:
-            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        case .Move:
-            break
-        case .Update:
-            break
+    @IBAction func addButtonTapped(sender: AnyObject) {
+        
+        let alert = UIAlertController(title: "Add List", message: nil, preferredStyle: .Alert)
+        
+        alert.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
+            textField.placeholder = "Enter list name"
         }
-    }
-    
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
-        switch type {
-        case .Insert:
-            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-        case .Delete:
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-        case .Update:
-            configureCell(self.tableView.cellForRowAtIndexPath(indexPath!)!, indexPath: indexPath!)
-        case .Move:
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-            tableView.insertRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-        }
-    }
-    
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        tableView.endUpdates()
+        
+        alert.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (action: UIAlertAction!) in
+            print("Saved")
+            
+            let nameTextField = alert.textFields!.first
+            
+            let list = NSEntityDescription.insertNewObjectForEntityForName("List", inManagedObjectContext: self.dataController.managedObjectContext) as! List
+            
+            list.name = nameTextField!.text!
+           
+            do {
+                try self.dataController.managedObjectContext.save()
+            } catch {
+                fatalError("Failure to save context: \(error)")
+            }
+
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: { (action: UIAlertAction!) in
+            print("Cancel")
+        }))
+        
+        presentViewController(alert, animated: true, completion: nil)
+        
+        
     }
     
 
@@ -144,4 +145,44 @@ class MainListTableViewController: UITableViewController, NSFetchedResultsContro
     }
     */
 
+}
+
+extension MainListTableViewController: NSFetchedResultsControllerDelegate {
+    
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        tableView.beginUpdates()
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+        switch type {
+        case .Insert:
+            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+        case .Delete:
+            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
+        case .Move:
+            break
+        case .Update:
+            break
+        }
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        switch type {
+        case .Insert:
+            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
+        case .Delete:
+            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+        case .Update:
+            configureCell(self.tableView.cellForRowAtIndexPath(indexPath!)!, indexPath: indexPath!)
+        case .Move:
+            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+            tableView.insertRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+        }
+    }
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        tableView.endUpdates()
+    }
+
+    
 }
