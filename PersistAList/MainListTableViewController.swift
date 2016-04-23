@@ -21,7 +21,6 @@ class MainListTableViewController: UITableViewController {
         
         // Do any additional setup after loading the view.
     }
-      
     
     func initializeFetchedResultsController() {
         let request = NSFetchRequest(entityName: "List")
@@ -38,7 +37,6 @@ class MainListTableViewController: UITableViewController {
             fatalError("Failed to initialize FetchedResultsController: \(error)")
         }
     }
-
     
     func configureCell(cell: UITableViewCell, indexPath: NSIndexPath) {
         let list = fetchedResultsController.objectAtIndexPath(indexPath) as! List
@@ -97,7 +95,6 @@ class MainListTableViewController: UITableViewController {
         
         
     }
-    
 
 
     /*
@@ -135,16 +132,28 @@ class MainListTableViewController: UITableViewController {
     }
     */
 
-    /*
+
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        
+        if segue.identifier == "toListView" {
+            
+            if let viewController = segue.destinationViewController as? ListViewController {
+                if let indexPath = tableView.indexPathForSelectedRow {
+                    // Fetch Record
+                    let list = fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
+                    
+                    // Configure View Controller
+                    viewController.list = list as? List
+                    viewController.dataController.managedObjectContext = dataController.managedObjectContext
+                }
+            }
+        }
+        
+        
     }
-    */
-
 }
 
 extension MainListTableViewController: NSFetchedResultsControllerDelegate {

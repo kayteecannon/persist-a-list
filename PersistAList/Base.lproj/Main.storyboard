@@ -23,7 +23,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="ssJ-fH-Iaq" kind="show" id="eLI-9H-YU8"/>
+                                    <segue destination="ssJ-fH-Iaq" kind="show" identifier="toListView" id="eLI-9H-YU8"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -110,6 +110,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="tableView" destination="Rca-Sq-0ym" id="xDB-Mw-Rbx"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gx7-03-vTq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
