@@ -21,6 +21,9 @@ class ListViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         initializeFetchedResultsController()
+        if let list = list {
+            updateViewWithList(list)
+        }
 
         // Do any additional setup after loading the view.
     }
@@ -30,10 +33,11 @@ class ListViewController: UIViewController, UITableViewDataSource {
         // Dispose of any resources that can be recreated.
     }
     
+    func updateViewWithList(list: List){
+        title = list.name
+    }
+    
     func initializeFetchedResultsController() {
-        let request = NSFetchRequest(entityName: "List")
-        let nameSort = NSSortDescriptor(key: "items.name", ascending: true)
-        request.sortDescriptors = [nameSort]
         
         let fetchRequest = NSFetchRequest(entityName: "List")
         let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
@@ -77,6 +81,41 @@ class ListViewController: UIViewController, UITableViewDataSource {
         return sectionInfo.numberOfObjects
     }
 
+    @IBAction func addItemButtonTapped(sender: AnyObject) {
+        
+        let alert = UIAlertController(title: "Add Item", message: nil, preferredStyle: .Alert)
+        
+        alert.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
+            textField.placeholder = "Enter item name"
+        }
+        
+        alert.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (action: UIAlertAction!) in
+            print("Saved")
+            
+            let nameTextField = alert.textFields!.first
+        
+            let item = NSEntityDescription.insertNewObjectForEntityForName("Item", inManagedObjectContext: self.dataController.managedObjectContext) as! Item 
+            
+            item.list = self.list!
+            
+            item.name = nameTextField!.text!
+            
+            
+            do {
+                try self.dataController.managedObjectContext.save()
+            } catch {
+                fatalError("Failure to save context: \(error)")
+            }
+            
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: { (action: UIAlertAction!) in
+            print("Cancel")
+        }))
+        
+        presentViewController(alert, animated: true, completion: nil)
+
+    }
     
 
     /*

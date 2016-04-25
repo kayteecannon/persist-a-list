@@ -12,6 +12,7 @@ import CoreData
 class MainListTableViewController: UITableViewController {
     
     var dataController = DataController()
+
     
     var fetchedResultsController: NSFetchedResultsController!
     
