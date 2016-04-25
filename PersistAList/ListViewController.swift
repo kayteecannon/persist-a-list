@@ -43,7 +43,7 @@ class ListViewController: UIViewController, UITableViewDataSource {
         let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
         
         fetchRequest.sortDescriptors = [sortDescriptor]
-        fetchRequest.predicate = NSPredicate(format:"(ANY items == %@)", self.list!)
+        fetchRequest.predicate = NSPredicate(format:"(ANY items == %@)", list!)
         
         let moc = self.dataController.managedObjectContext
         fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
@@ -58,9 +58,17 @@ class ListViewController: UIViewController, UITableViewDataSource {
     
     
     func configureCell(cell: UITableViewCell, indexPath: NSIndexPath) {
-        let item = fetchedResultsController.objectAtIndexPath(indexPath) as! Item
+        let list = fetchedResultsController.objectAtIndexPath(indexPath) as! List
         // Populate cell from the NSManagedObject instance
-        cell.textLabel!.text = item.name
+        
+        if let itemSet = list.items {
+            let items = Array(itemSet) as! [Item]
+            let item = items[indexPath.row]
+            
+            cell.textLabel?.text = item.name
+
+        }
+      
         
     }
     
