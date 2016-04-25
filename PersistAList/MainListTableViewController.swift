@@ -26,6 +26,7 @@ class MainListTableViewController: UITableViewController {
     func initializeFetchedResultsController() {
         let request = NSFetchRequest(entityName: "List")
         let nameSort = NSSortDescriptor(key: "name", ascending: true)
+        
         request.sortDescriptors = [nameSort]
         
         let moc = self.dataController.managedObjectContext

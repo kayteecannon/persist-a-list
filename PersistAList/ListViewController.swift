@@ -15,12 +15,11 @@ class ListViewController: UIViewController, UITableViewDataSource {
     var dataController = DataController()
     
     var list: List?
-    
-    var fetchedResultsController: NSFetchedResultsController!
+
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initializeFetchedResultsController()
+//        initializeFetchedResultsController()
         if let list = list {
             updateViewWithList(list)
         }
@@ -37,39 +36,19 @@ class ListViewController: UIViewController, UITableViewDataSource {
         title = list.name
     }
     
-    func initializeFetchedResultsController() {
-        
-        let fetchRequest = NSFetchRequest(entityName: "List")
-        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
-        
-        fetchRequest.sortDescriptors = [sortDescriptor]
-        fetchRequest.predicate = NSPredicate(format:"(ANY items == %@)", list!)
-        
-        let moc = self.dataController.managedObjectContext
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
-        fetchedResultsController.delegate = self
-        
-        do {
-            try fetchedResultsController.performFetch()
-        } catch {
-            fatalError("Failed to initialize FetchedResultsController: \(error)")
-        }
-    }
-    
-    
     func configureCell(cell: UITableViewCell, indexPath: NSIndexPath) {
-        let list = fetchedResultsController.objectAtIndexPath(indexPath) as! List
+        
         // Populate cell from the NSManagedObject instance
         
-        if let itemSet = list.items {
+        if let itemSet = list!.items {
             let items = Array(itemSet) as! [Item]
-            let item = items[indexPath.row]
+            let sortedItems = items.sort { $0.name < $1.name }
+            let item = sortedItems[indexPath.row]
             
             cell.textLabel?.text = item.name
 
         }
-      
-        
+
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -80,14 +59,15 @@ class ListViewController: UIViewController, UITableViewDataSource {
         return cell
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return fetchedResultsController.sections!.count
-    }
-    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let sectionInfo = fetchedResultsController.sections![section]
-        return sectionInfo.numberOfObjects
+        if let list = list {
+            return list.items!.count
+        }
+        else {
+            return 0
+        }
     }
+
 
     @IBAction func addItemButtonTapped(sender: AnyObject) {
         
@@ -99,14 +79,14 @@ class ListViewController: UIViewController, UITableViewDataSource {
         
         alert.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (action: UIAlertAction!) in
             print("Saved")
-            
+           
             let nameTextField = alert.textFields!.first
-        
-            let item = NSEntityDescription.insertNewObjectForEntityForName("Item", inManagedObjectContext: self.dataController.managedObjectContext) as! Item 
             
-            item.list = self.list!
+            let entityItem = NSEntityDescription.entityForName("Item", inManagedObjectContext: self.dataController.managedObjectContext)
+            let newItem = NSManagedObject(entity: entityItem!, insertIntoManagedObjectContext: self.dataController.managedObjectContext) as! Item
             
-            item.name = nameTextField!.text!
+            newItem.list = self.list!
+            newItem.name = (nameTextField?.text)!
             
             
             do {
@@ -115,6 +95,8 @@ class ListViewController: UIViewController, UITableViewDataSource {
                 fatalError("Failure to save context: \(error)")
             }
             
+             self.tableView.reloadData()
+            
         }))
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: { (action: UIAlertAction!) in
@@ -122,8 +104,12 @@ class ListViewController: UIViewController, UITableViewDataSource {
         }))
         
         presentViewController(alert, animated: true, completion: nil)
+        
+       
 
     }
+    
+    
     
 
     /*
