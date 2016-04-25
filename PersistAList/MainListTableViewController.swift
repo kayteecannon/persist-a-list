@@ -30,7 +30,7 @@ class MainListTableViewController: UITableViewController {
         request.sortDescriptors = [nameSort]
         
         let moc = self.dataController.managedObjectContext
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: nil)
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: "persistAList")
         fetchedResultsController.delegate = self
         
         do {

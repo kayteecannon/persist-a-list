@@ -15,8 +15,6 @@
 		ABD7E97A1CC912440005C2EA /* PersistAListUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9791CC912440005C2EA /* PersistAListUITests.swift */; };
 		ABD7E9921CC919920005C2EA /* MainListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9911CC919920005C2EA /* MainListTableViewController.swift */; };
 		ABD7E9941CC91FB60005C2EA /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9931CC91FB60005C2EA /* ListViewController.swift */; };
-		ABD7E9961CC91FCF0005C2EA /* AddItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9951CC91FCF0005C2EA /* AddItemTableViewController.swift */; };
-		ABD7E9981CC91FDE0005C2EA /* AddListTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9971CC91FDE0005C2EA /* AddListTableViewController.swift */; };
 		ABD7E99B1CC922700005C2EA /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9991CC922700005C2EA /* Model.xcdatamodeld */; };
 		ABD7E9A81CC927360005C2EA /* Item+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9A41CC927360005C2EA /* Item+CoreDataProperties.swift */; };
 		ABD7E9A91CC927360005C2EA /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABD7E9A51CC927360005C2EA /* Item.swift */; };
@@ -57,8 +55,6 @@
 		ABD7E97B1CC912440005C2EA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		ABD7E9911CC919920005C2EA /* MainListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainListTableViewController.swift; sourceTree = "<group>"; };
 		ABD7E9931CC91FB60005C2EA /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
-		ABD7E9951CC91FCF0005C2EA /* AddItemTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddItemTableViewController.swift; sourceTree = "<group>"; };
-		ABD7E9971CC91FDE0005C2EA /* AddListTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddListTableViewController.swift; sourceTree = "<group>"; };
 		ABD7E99A1CC922700005C2EA /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		ABD7E9A41CC927360005C2EA /* Item+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Item+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		ABD7E9A51CC927360005C2EA /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
@@ -121,8 +117,6 @@
 			children = (
 				ABD7E9591CC912440005C2EA /* AppDelegate.swift */,
 				ABD7E95D1CC912440005C2EA /* Main.storyboard */,
-				ABD7E9971CC91FDE0005C2EA /* AddListTableViewController.swift */,
-				ABD7E9951CC91FCF0005C2EA /* AddItemTableViewController.swift */,
 				ABD7E9931CC91FB60005C2EA /* ListViewController.swift */,
 				ABD7E9911CC919920005C2EA /* MainListTableViewController.swift */,
 				ABD7E9AE1CC977F10005C2EA /* DataController.swift */,
@@ -287,9 +281,7 @@
 				ABD7E9AF1CC977F10005C2EA /* DataController.swift in Sources */,
 				ABD7E9AA1CC927360005C2EA /* List+CoreDataProperties.swift in Sources */,
 				ABD7E9A91CC927360005C2EA /* Item.swift in Sources */,
-				ABD7E9961CC91FCF0005C2EA /* AddItemTableViewController.swift in Sources */,
 				ABD7E9A81CC927360005C2EA /* Item+CoreDataProperties.swift in Sources */,
-				ABD7E9981CC91FDE0005C2EA /* AddListTableViewController.swift in Sources */,
 				ABD7E9AB1CC927360005C2EA /* List.swift in Sources */,
 				ABD7E99B1CC922700005C2EA /* Model.xcdatamodeld in Sources */,
 				ABD7E95A1CC912440005C2EA /* AppDelegate.swift in Sources */,
