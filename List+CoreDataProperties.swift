@@ -15,6 +15,6 @@ import CoreData
 extension List {
 
     @NSManaged var name: String
-    @NSManaged var items: NSSet?
+    @NSManaged var items: NSMutableSet?
 
 }

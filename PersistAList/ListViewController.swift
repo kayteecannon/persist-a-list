@@ -192,5 +192,53 @@ class ListViewController: UIViewController, UITableViewDataSource {
        
 
     }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        
+        switch (segmentedControl.selectedSegmentIndex) {
+            
+        case 0:  if let itemSet = list!.items {
+            let items = Array(itemSet) as! [Item]
+            let sortedItems = items.sort { $0.name < $1.name }
+            let item = sortedItems[indexPath.row]
+            
+            itemSet.removeObject(item)
+            
+            do {
+                try self.dataController.managedObjectContext.save()
+            } catch {
+                fatalError("Failure to save context: \(error)")
+            }
+            
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        
+            }
+        case 1: if let itemSet = list!.items {
+            let items = Array(itemSet) as! [Item]
+            let neededItems = items.filter({$0.isNeeded.boolValue})
+            
+            if neededItems.count > 0 {
+                let sortedNeededItems = neededItems.sort { $0.name < $1.name }
+                let item = sortedNeededItems[indexPath.row]
+                item.isNeeded = false
+                
+                do {
+                    try self.dataController.managedObjectContext.save()
+                } catch {
+                    fatalError("Failure to save context: \(error)")
+                }
+                
+                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+
+            }
+            }
+            
+        default: break
+        
+
+        }
+    }
+
 
 }
