@@ -67,6 +67,9 @@
                                                 <segment title="All"/>
                                                 <segment title="Need"/>
                                             </segments>
+                                            <connections>
+                                                <action selector="segmentedControlTapped:" destination="ssJ-fH-Iaq" eventType="valueChanged" id="EOy-hw-Qvn"/>
+                                            </connections>
                                         </segmentedControl>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="FbN-Ls-QFA"/>
@@ -110,6 +113,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="segmentedControl" destination="CVh-6r-EhG" id="d7N-Fv-1CY"/>
                         <outlet property="tableView" destination="Rca-Sq-0ym" id="xDB-Mw-Rbx"/>
                     </connections>
                 </viewController>

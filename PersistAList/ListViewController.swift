@@ -12,6 +12,9 @@ import CoreData
 class ListViewController: UIViewController, UITableViewDataSource {
     
     @IBOutlet weak var tableView: UITableView!
+    
+    @IBOutlet weak var segmentedControl: UISegmentedControl!
+    
     var dataController = DataController()
     
     var list: List?
@@ -35,15 +38,35 @@ class ListViewController: UIViewController, UITableViewDataSource {
     func configureCell(cell: UITableViewCell, indexPath: NSIndexPath) {
         
         // Populate cell from the NSManagedObject instance
-        
-        if let itemSet = list!.items {
+        switch (segmentedControl.selectedSegmentIndex) {
+            
+        case 0:   if let itemSet = list!.items {
             let items = Array(itemSet) as! [Item]
             let sortedItems = items.sort { $0.name < $1.name }
             let item = sortedItems[indexPath.row]
             
             cell.textLabel?.text = item.name
-
+            }
+            
+        case 1:   if let itemSet = list!.items {
+            let items = Array(itemSet) as! [Item]
+            let neededItems = items.filter({$0.isNeeded.boolValue})
+            
+            if neededItems.count > 0 {
+                let sortedNeededItems = neededItems.sort { $0.name < $1.name }
+                let item = sortedNeededItems[indexPath.row]
+                
+                cell.textLabel?.text = item.name
+                
+            }
+            
+            break
+            }
+            
+        default: break
+            
         }
+    
 
     }
     
@@ -51,20 +74,67 @@ class ListViewController: UIViewController, UITableViewDataSource {
         let cell = tableView.dequeueReusableCellWithIdentifier("itemCell", forIndexPath: indexPath)
         
         // Set up the cell
-        configureCell(cell, indexPath: indexPath)
+            
+            switch (segmentedControl.selectedSegmentIndex) {
+                
+            case 0:   if let itemSet = list!.items {
+                let items = Array(itemSet) as! [Item]
+                let sortedItems = items.sort { $0.name < $1.name }
+                let item = sortedItems[indexPath.row]
+                
+                cell.textLabel?.text = item.name
+                }
+                
+            case 1:   if let itemSet = list!.items {
+                let items = Array(itemSet) as! [Item]
+                let neededItems = items.filter({$0.isNeeded.boolValue})
+                
+                if neededItems.count > 0 {
+                    let sortedNeededItems = neededItems.sort { $0.name < $1.name }
+                    let item = sortedNeededItems[indexPath.row]
+                    
+                    cell.textLabel?.text = item.name
+                }
+                
+                break
+                }
+                
+            default: break
+                
+            }
         
         return cell
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let list = list {
-            return list.items!.count
+        
+        var numberOfRows = 0
+        
+        switch(segmentedControl.selectedSegmentIndex) {
+            
+        case 0: if let list = list {
+            
+            numberOfRows =  list.items!.count
+            
+            }
+            
+        case 1: if let list = list {
+            let neededItems = list.items?.filter({$0.isNeeded.boolValue}) as! [Item]
+            numberOfRows = neededItems.count
+            }
+            
+        default: numberOfRows = 0
+            
         }
-        else {
-            return 0
-        }
+        
+        return numberOfRows
+        
     }
 
+    @IBAction func segmentedControlTapped(sender: AnyObject) {
+        
+        tableView.reloadData()
+    }
 
     @IBAction func addItemButtonTapped(sender: AnyObject) {
         
