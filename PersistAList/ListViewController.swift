@@ -35,41 +35,6 @@ class ListViewController: UIViewController, UITableViewDataSource {
         title = list.name
     }
     
-    func configureCell(cell: UITableViewCell, indexPath: NSIndexPath) {
-        
-        // Populate cell from the NSManagedObject instance
-        switch (segmentedControl.selectedSegmentIndex) {
-            
-        case 0:   if let itemSet = list!.items {
-            let items = Array(itemSet) as! [Item]
-            let sortedItems = items.sort { $0.name < $1.name }
-            let item = sortedItems[indexPath.row]
-            
-            cell.textLabel?.text = item.name
-            }
-            
-        case 1:   if let itemSet = list!.items {
-            let items = Array(itemSet) as! [Item]
-            let neededItems = items.filter({$0.isNeeded.boolValue})
-            
-            if neededItems.count > 0 {
-                let sortedNeededItems = neededItems.sort { $0.name < $1.name }
-                let item = sortedNeededItems[indexPath.row]
-                
-                cell.textLabel?.text = item.name
-                
-            }
-            
-            break
-            }
-            
-        default: break
-            
-        }
-    
-
-    }
-    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("itemCell", forIndexPath: indexPath)
         
@@ -83,7 +48,14 @@ class ListViewController: UIViewController, UITableViewDataSource {
                 let item = sortedItems[indexPath.row]
                 
                 cell.textLabel?.text = item.name
+                
+                if item.isNeeded.boolValue {
+                    cell.accessoryType = .Checkmark
+                } else {
+                    cell.accessoryType = .None
                 }
+
+            }
                 
             case 1:   if let itemSet = list!.items {
                 let items = Array(itemSet) as! [Item]
@@ -94,6 +66,7 @@ class ListViewController: UIViewController, UITableViewDataSource {
                     let item = sortedNeededItems[indexPath.row]
                     
                     cell.textLabel?.text = item.name
+                    cell.accessoryType = .None
                 }
                 
                 break
@@ -131,6 +104,49 @@ class ListViewController: UIViewController, UITableViewDataSource {
         
     }
 
+
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if let itemCell = tableView.cellForRowAtIndexPath(indexPath) {
+            
+            switch (segmentedControl.selectedSegmentIndex) {
+                
+            case 0:  if let itemSet = list!.items {
+                let items = Array(itemSet) as! [Item]
+                let sortedItems = items.sort { $0.name < $1.name }
+                let item = sortedItems[indexPath.row]
+                
+                if itemCell.accessoryType == .Checkmark {
+                    item.isNeeded = false
+                    itemCell.accessoryType = .None
+                } else {
+                     item.isNeeded = true
+                    itemCell.accessoryType = .Checkmark
+                }
+                }
+                
+                
+            case 1:
+                if let itemSet = list!.items {
+                    let items = Array(itemSet) as! [Item]
+                    let neededItems = items.filter({$0.isNeeded.boolValue})
+                    
+                    if neededItems.count > 0 {
+                        let sortedNeededItems = neededItems.sort { $0.name < $1.name }
+                        let item = sortedNeededItems[indexPath.row]
+                        item.isNeeded = false
+                        itemCell.accessoryType = .None
+                        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                    }
+                }
+                
+            default: break
+        
+        
+            }
+        }
+    }
+
     @IBAction func segmentedControlTapped(sender: AnyObject) {
         
         tableView.reloadData()
@@ -154,6 +170,7 @@ class ListViewController: UIViewController, UITableViewDataSource {
             
             newItem.list = self.list!
             newItem.name = (nameTextField?.text)!
+            newItem.isNeeded = true
             
             
             do {
