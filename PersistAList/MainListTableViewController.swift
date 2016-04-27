@@ -16,11 +16,29 @@ class MainListTableViewController: UITableViewController {
     
     var fetchedResultsController: NSFetchedResultsController!
     
+    let navbarFont = UIFont(name: "AvenirNextCondensed-DemiBold", size: 20) ?? UIFont.systemFontOfSize(17)
+    
+    var barShadow: NSShadow = NSShadow()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initializeFetchedResultsController()
         
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        
+        self.navigationController?.navigationBar.barTintColor = UIColor.palPurpleColor()
+        
+        barShadow.shadowColor = UIColor.blackColor()
+        barShadow.shadowOffset = CGSize(width: 0, height: 1)
+        
+        let attributes = [NSShadowAttributeName: barShadow, NSFontAttributeName: navbarFont, NSForegroundColorAttributeName: UIColor.whiteColor()]
+        
+        self.navigationController?.navigationBar.titleTextAttributes = attributes
+
     }
     
     func initializeFetchedResultsController() {

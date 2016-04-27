@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
-        <!--Main-->
+        <!--Persist A List-->
         <scene sceneID="mVi-D5-TF8">
             <objects>
                 <tableViewController id="35q-dy-KXC" customClass="MainListTableViewController" customModule="PersistAList" customModuleProvider="target" sceneMemberID="viewController">
@@ -31,7 +31,8 @@
                             <outlet property="delegate" destination="35q-dy-KXC" id="tns-vo-p1a"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Main" id="9eL-wO-kiS">
+                    <navigationItem key="navigationItem" title="Persist A List" id="9eL-wO-kiS">
+                        <barButtonItem key="backBarButtonItem" title="All Lists" id="C4D-nw-HE8"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="OHm-qW-gG4">
                             <connections>
                                 <action selector="addButtonTapped:" destination="35q-dy-KXC" id="I2T-hy-syh"/>
@@ -140,4 +141,5 @@
             <point key="canvasLocation" x="526" y="1213"/>
         </scene>
     </scenes>
+    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
 </document>

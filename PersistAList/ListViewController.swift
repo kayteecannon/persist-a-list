@@ -26,6 +26,11 @@ class ListViewController: UIViewController, UITableViewDataSource {
             updateViewWithList(list)
         }
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(true)
+        segmentedControl.tintColor = UIColor.palPurpleColor()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -148,6 +153,19 @@ class ListViewController: UIViewController, UITableViewDataSource {
     }
 
     @IBAction func segmentedControlTapped(sender: AnyObject) {
+        
+        switch(segmentedControl.selectedSegmentIndex) {
+            
+        case 0: self.navigationController?.navigationBar.barTintColor = UIColor.palPurpleColor()
+                segmentedControl.tintColor = UIColor.palPurpleColor()
+            
+        case 1: self.navigationController?.navigationBar.barTintColor = UIColor.palOrangeColor()
+                segmentedControl.tintColor = UIColor.palOrangeColor()
+
+        default: self.navigationController?.navigationBar.barTintColor = UIColor.palPurpleColor()
+                 segmentedControl.tintColor = UIColor.palPurpleColor()
+            
+        }
         
         tableView.reloadData()
     }
