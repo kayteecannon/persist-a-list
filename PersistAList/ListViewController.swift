@@ -29,6 +29,7 @@ class ListViewController: UIViewController, UITableViewDataSource {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
+        tableView.tintColor = UIColor.blackColor()
         segmentedControl.tintColor = UIColor.palPurpleColor()
     }
 
@@ -149,6 +150,8 @@ class ListViewController: UIViewController, UITableViewDataSource {
         
         
             }
+            
+            tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
     }
 
@@ -178,6 +181,10 @@ class ListViewController: UIViewController, UITableViewDataSource {
             textField.placeholder = "Enter item name"
         }
         
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { (action: UIAlertAction!) in
+            print("Cancel")
+        }))
+        
         alert.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (action: UIAlertAction!) in
             print("Saved")
            
@@ -201,11 +208,11 @@ class ListViewController: UIViewController, UITableViewDataSource {
             
         }))
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: { (action: UIAlertAction!) in
-            print("Cancel")
-        }))
+        
         
         presentViewController(alert, animated: true, completion: nil)
+        
+        alert.view.tintColor = UIColor.palAlertPurpleColor()
         
        
 
@@ -256,6 +263,8 @@ class ListViewController: UIViewController, UITableViewDataSource {
         
 
         }
+        
+        
     }
 
 

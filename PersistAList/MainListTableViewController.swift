@@ -16,7 +16,8 @@ class MainListTableViewController: UITableViewController {
     
     var fetchedResultsController: NSFetchedResultsController!
     
-    let navbarFont = UIFont(name: "AvenirNextCondensed-DemiBold", size: 20) ?? UIFont.systemFontOfSize(17)
+    let navbarFont = UIFont(name: "AvenirNextCondensed-DemiBold", size: 22) ?? UIFont.systemFontOfSize(17)
+    let barFont = UIFont(name: "Avenir", size: 17.0) ?? UIFont.systemFontOfSize(17)
     
     var barShadow: NSShadow = NSShadow()
     
@@ -35,9 +36,18 @@ class MainListTableViewController: UITableViewController {
         barShadow.shadowColor = UIColor.blackColor()
         barShadow.shadowOffset = CGSize(width: 0, height: 1)
         
-        let attributes = [NSShadowAttributeName: barShadow, NSFontAttributeName: navbarFont, NSForegroundColorAttributeName: UIColor.whiteColor()]
+        let navBarAttributes = [NSShadowAttributeName: barShadow, NSFontAttributeName: navbarFont, NSForegroundColorAttributeName: UIColor.whiteColor()]
         
-        self.navigationController?.navigationBar.titleTextAttributes = attributes
+        self.navigationController?.navigationBar.titleTextAttributes = navBarAttributes
+
+        
+        let attributes = [
+            NSForegroundColorAttributeName: UIColor.whiteColor(),
+            NSFontAttributeName : barFont
+        ]
+        
+        UIBarButtonItem.appearance().setTitleTextAttributes(attributes, forState: UIControlState.Normal)
+        
 
     }
     
@@ -90,6 +100,10 @@ class MainListTableViewController: UITableViewController {
             textField.placeholder = "Enter list name"
         }
         
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { (action: UIAlertAction!) in
+            print("Cancel")
+        }))
+        
         alert.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (action: UIAlertAction!) in
             print("Saved")
             
@@ -107,11 +121,11 @@ class MainListTableViewController: UITableViewController {
 
         }))
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: { (action: UIAlertAction!) in
-            print("Cancel")
-        }))
+       
         
         presentViewController(alert, animated: true, completion: nil)
+        
+        alert.view.tintColor = UIColor.palAlertPurpleColor()
         
         
     }

@@ -16,7 +16,11 @@ extension UIColor {
     }
     
     static func palOrangeColor() -> UIColor {
-        return UIColor (red: 0.894, green: 0.494, blue: 0.188, alpha: 1.00)
+        return UIColor(red: 0.894, green: 0.494, blue: 0.188, alpha: 1.00)
+    }
+    
+    static func palAlertPurpleColor() -> UIColor {
+        return UIColor(red: 0.553, green: 0.282, blue: 0.671, alpha: 1.00)
     }
 
 }
