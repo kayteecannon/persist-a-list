@@ -12,7 +12,6 @@ import CoreData
 class MainListTableViewController: UITableViewController {
     
     var dataController = DataController()
-
     
     var fetchedResultsController: NSFetchedResultsController!
     
@@ -20,6 +19,8 @@ class MainListTableViewController: UITableViewController {
     let barFont = UIFont(name: "Avenir", size: 17.0) ?? UIFont.systemFontOfSize(17)
     
     var barShadow: NSShadow = NSShadow()
+    
+    weak var AddAlertSaveAction: UIAlertAction?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,20 +95,26 @@ class MainListTableViewController: UITableViewController {
     
     @IBAction func addButtonTapped(sender: AnyObject) {
         
-        let alert = UIAlertController(title: "Add List", message: nil, preferredStyle: .Alert)
+        let alertController = UIAlertController(title: "Add List", message: nil, preferredStyle: .Alert)
         
-        alert.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
+        alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
             textField.placeholder = "Enter list name"
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MainListTableViewController.handleTextFieldTextDidChangeNotification), name: UITextFieldTextDidChangeNotification, object: textField)
         }
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { (action: UIAlertAction!) in
-            print("Cancel")
-        }))
+        func removeTextFieldObserver() {
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: UITextFieldTextDidChangeNotification, object: alertController.textFields![0])
+        }
         
-        alert.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (action: UIAlertAction!) in
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { action in
+            print("Cancel Button Pressed")
+            removeTextFieldObserver()
+        }
+        
+        let saveAction = UIAlertAction(title: "Save", style: .Default) { action in
             print("Saved")
             
-            let nameTextField = alert.textFields!.first
+            let nameTextField = alertController.textFields!.first
             
             let list = NSEntityDescription.insertNewObjectForEntityForName("List", inManagedObjectContext: self.dataController.managedObjectContext) as! List
             
@@ -118,27 +125,36 @@ class MainListTableViewController: UITableViewController {
             } catch {
                 fatalError("Failure to save context: \(error)")
             }
-
-        }))
+            
+            self.tableView.reloadData()
+            removeTextFieldObserver()
+        }
         
-       
+        // disable the 'save' button (otherAction) initially
+        saveAction.enabled = false
         
-        presentViewController(alert, animated: true, completion: nil)
+        // save the other action to toggle the enabled/disabled state when the text changed.
+        AddAlertSaveAction = saveAction
         
-        alert.view.tintColor = UIColor.palAlertPurpleColor()
+        // Add the actions.
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
+        
+        alertController.view.tintColor = UIColor.palAlertPurpleColor()
         
         
     }
-
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+    
+    //handler
+    func handleTextFieldTextDidChangeNotification(notification: NSNotification) {
+        let textField = notification.object as! UITextField
+        
+        // Enforce a minimum length of >= 1 for secure text alerts.
+        AddAlertSaveAction!.enabled = textField.text?.characters.count >= 1
     }
-    */
-
+    
     
     // Override to support editing the table view.
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {

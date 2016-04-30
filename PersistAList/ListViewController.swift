@@ -18,6 +18,8 @@ class ListViewController: UIViewController, UITableViewDataSource {
     var dataController = DataController()
     
     var list: List?
+    
+    weak var AddAlertSaveAction: UIAlertAction?
 
 
     override func viewDidLoad() {
@@ -151,6 +153,13 @@ class ListViewController: UIViewController, UITableViewDataSource {
         
             }
             
+            do {
+                try self.dataController.managedObjectContext.save()
+            } catch {
+                fatalError("Failure to save context: \(error)")
+            }
+
+            
             tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
     }
@@ -175,20 +184,27 @@ class ListViewController: UIViewController, UITableViewDataSource {
 
     @IBAction func addItemButtonTapped(sender: AnyObject) {
         
-        let alert = UIAlertController(title: "Add Item", message: nil, preferredStyle: .Alert)
+        let alertController = UIAlertController(title: "Add Item", message: nil, preferredStyle: .Alert)
         
-        alert.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
+        alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
             textField.placeholder = "Enter item name"
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ListViewController.handleTextFieldTextDidChangeNotification), name: UITextFieldTextDidChangeNotification, object: textField)
         }
         
-        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: { (action: UIAlertAction!) in
-            print("Cancel")
-        }))
+        func removeTextFieldObserver() {
+            NSNotificationCenter.defaultCenter().removeObserver(self, name: UITextFieldTextDidChangeNotification, object: alertController.textFields![0])
+        }
         
-        alert.addAction(UIAlertAction(title: "Save", style: .Default, handler: { (action: UIAlertAction!) in
+        // Create the actions.
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { action in
+            print("Cancel Button Pressed")
+            removeTextFieldObserver()
+        }
+        
+        let saveAction = UIAlertAction(title: "Save", style: .Default) { action in
             print("Saved")
-           
-            let nameTextField = alert.textFields!.first
+            
+            let nameTextField = alertController.textFields!.first
             
             let entityItem = NSEntityDescription.entityForName("Item", inManagedObjectContext: self.dataController.managedObjectContext)
             let newItem = NSManagedObject(entity: entityItem!, insertIntoManagedObjectContext: self.dataController.managedObjectContext) as! Item
@@ -205,19 +221,32 @@ class ListViewController: UIViewController, UITableViewDataSource {
             }
             
             self.tableView.reloadData()
-            
-        }))
+            removeTextFieldObserver()
+        }
         
+        // disable the 'save' button (otherAction) initially
+        saveAction.enabled = false
         
+        // save the other action to toggle the enabled/disabled state when the text changed.
+        AddAlertSaveAction = saveAction
         
-        presentViewController(alert, animated: true, completion: nil)
+        // Add the actions.
+        alertController.addAction(cancelAction)
+        alertController.addAction(saveAction)
         
-        alert.view.tintColor = UIColor.palAlertPurpleColor()
+        presentViewController(alertController, animated: true, completion: nil)
         
-       
-
+        alertController.view.tintColor = UIColor.palAlertPurpleColor()
     }
     
+    //handler
+    func handleTextFieldTextDidChangeNotification(notification: NSNotification) {
+        let textField = notification.object as! UITextField
+        
+        // Enforce a minimum length of >= 1 for secure text alerts.
+        AddAlertSaveAction!.enabled = textField.text?.characters.count >= 1
+    }
+
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
         
@@ -228,7 +257,7 @@ class ListViewController: UIViewController, UITableViewDataSource {
             let sortedItems = items.sort { $0.name < $1.name }
             let item = sortedItems[indexPath.row]
             
-            itemSet.removeObject(item)
+            dataController.managedObjectContext.deleteObject(item)
             
             do {
                 try self.dataController.managedObjectContext.save()
