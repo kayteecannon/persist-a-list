@@ -99,6 +99,7 @@ class MainListTableViewController: UITableViewController {
         
         alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
             textField.placeholder = "Enter list name"
+            textField.returnKeyType = .Done
             NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MainListTableViewController.handleTextFieldTextDidChangeNotification), name: UITextFieldTextDidChangeNotification, object: textField)
         }
         
@@ -115,6 +116,8 @@ class MainListTableViewController: UITableViewController {
             print("Saved")
             
             let nameTextField = alertController.textFields!.first
+            
+            
             
             let list = NSEntityDescription.insertNewObjectForEntityForName("List", inManagedObjectContext: self.dataController.managedObjectContext) as! List
             

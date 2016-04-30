@@ -188,6 +188,7 @@ class ListViewController: UIViewController, UITableViewDataSource {
         
         alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
             textField.placeholder = "Enter item name"
+            textField.returnKeyType = .Done
             NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ListViewController.handleTextFieldTextDidChangeNotification), name: UITextFieldTextDidChangeNotification, object: textField)
         }
         
