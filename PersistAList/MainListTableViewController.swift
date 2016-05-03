@@ -11,7 +11,7 @@ import CoreData
 
 class MainListTableViewController: UITableViewController {
     
-    var dataController = DataController()
+    var coreDataStack: CoreDataStack!
     
     var fetchedResultsController: NSFetchedResultsController!
     
@@ -58,14 +58,14 @@ class MainListTableViewController: UITableViewController {
         
         request.sortDescriptors = [nameSort]
         
-        let moc = self.dataController.managedObjectContext
+        let moc = coreDataStack.context
         fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: moc, sectionNameKeyPath: nil, cacheName: "persistAList")
         fetchedResultsController.delegate = self
         
         do {
             try fetchedResultsController.performFetch()
-        } catch {
-            fatalError("Failed to initialize FetchedResultsController: \(error)")
+        } catch let error as NSError {
+            print("Error: \(error.localizedDescription)")
         }
     }
     
@@ -119,15 +119,11 @@ class MainListTableViewController: UITableViewController {
             
             
             
-            let list = NSEntityDescription.insertNewObjectForEntityForName("List", inManagedObjectContext: self.dataController.managedObjectContext) as! List
+            let list = NSEntityDescription.insertNewObjectForEntityForName("List", inManagedObjectContext: self.coreDataStack.context) as! List
             
             list.name = nameTextField!.text!
            
-            do {
-                try self.dataController.managedObjectContext.save()
-            } catch {
-                fatalError("Failure to save context: \(error)")
-            }
+            self.coreDataStack.saveContext()
             
             self.tableView.reloadData()
             removeTextFieldObserver()
@@ -162,17 +158,13 @@ class MainListTableViewController: UITableViewController {
     // Override to support editing the table view.
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
-        let moc = dataController.managedObjectContext
+        let moc = coreDataStack.context
         
         if editingStyle == .Delete {
             let managedObject: NSManagedObject = fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
             moc.deleteObject(managedObject)
             
-            do {
-                try self.dataController.managedObjectContext.save()
-            } catch {
-                fatalError("Failure to save context: \(error)")
-            }
+            coreDataStack.saveContext()
         }
     }
 
@@ -199,20 +191,20 @@ class MainListTableViewController: UITableViewController {
         
         if segue.identifier == "toListView" {
             
-            if let viewController = segue.destinationViewController as? ListViewController {
-                if let indexPath = tableView.indexPathForSelectedRow {
-                    // Fetch Record
-                    let list = fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-                    
-                    // Configure View Controller
-                    viewController.list = list as? List
-                    viewController.dataController.managedObjectContext = dataController.managedObjectContext
-                }
-            }
+            guard let indexPath = tableView.indexPathForSelectedRow else { return }
+            
+            // Fetch List
+            let list = self.fetchedResultsController.objectAtIndexPath(indexPath) as! List
+            
+            // Fetch Destination View Controller
+            let listViewController = segue.destinationViewController as! ListViewController
+            
+            // Configure View Controller
+            listViewController.coreDataStack = coreDataStack
+            listViewController.list = list
         }
-        
-        
     }
+
 }
 
 extension MainListTableViewController: NSFetchedResultsControllerDelegate {

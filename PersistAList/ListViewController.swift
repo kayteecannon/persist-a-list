@@ -15,8 +15,7 @@ class ListViewController: UIViewController, UITableViewDataSource {
     
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     
-    var dataController = DataController()
-    
+    var coreDataStack: CoreDataStack!
     var list: List?
     
     weak var AddAlertSaveAction: UIAlertAction?
@@ -153,12 +152,7 @@ class ListViewController: UIViewController, UITableViewDataSource {
         
             }
             
-            do {
-                try self.dataController.managedObjectContext.save()
-            } catch {
-                fatalError("Failure to save context: \(error)")
-            }
-
+            coreDataStack.saveContext()
             
             tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
@@ -207,19 +201,16 @@ class ListViewController: UIViewController, UITableViewDataSource {
             
             let nameTextField = alertController.textFields!.first
             
-            let entityItem = NSEntityDescription.entityForName("Item", inManagedObjectContext: self.dataController.managedObjectContext)
-            let newItem = NSManagedObject(entity: entityItem!, insertIntoManagedObjectContext: self.dataController.managedObjectContext) as! Item
+            let entityItem = NSEntityDescription.entityForName("Item", inManagedObjectContext: self.coreDataStack.context)
+            let newItem = NSManagedObject(entity: entityItem!, insertIntoManagedObjectContext: self.coreDataStack.context)
+                as! Item
             
             newItem.list = self.list!
             newItem.name = (nameTextField?.text)!
             newItem.isNeeded = true
             
             
-            do {
-                try self.dataController.managedObjectContext.save()
-            } catch {
-                fatalError("Failure to save context: \(error)")
-            }
+            self.coreDataStack.saveContext()
             
             self.tableView.reloadData()
             removeTextFieldObserver()
@@ -258,13 +249,9 @@ class ListViewController: UIViewController, UITableViewDataSource {
             let sortedItems = items.sort { $0.name < $1.name }
             let item = sortedItems[indexPath.row]
             
-            dataController.managedObjectContext.deleteObject(item)
+            coreDataStack.context.deleteObject(item)
             
-            do {
-                try self.dataController.managedObjectContext.save()
-            } catch {
-                fatalError("Failure to save context: \(error)")
-            }
+            coreDataStack.saveContext()
             
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         
@@ -278,11 +265,7 @@ class ListViewController: UIViewController, UITableViewDataSource {
                 let item = sortedNeededItems[indexPath.row]
                 item.isNeeded = false
                 
-                do {
-                    try self.dataController.managedObjectContext.save()
-                } catch {
-                    fatalError("Failure to save context: \(error)")
-                }
+                coreDataStack.saveContext()
                 
                 tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
 

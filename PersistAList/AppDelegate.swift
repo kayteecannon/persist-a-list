@@ -11,13 +11,19 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
         
-        var window: UIWindow?
-        var dataController: DataController!
-        
-        func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-            dataController = DataController()
-            // Basic User Interface initialization
-            return true
-        }
+    var window: UIWindow?
+    lazy var coreDataStack = CoreDataStack()
+    
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        let navController = window!.rootViewController as! UINavigationController
+        let viewController = navController.topViewController as! MainListTableViewController
+        viewController.coreDataStack = coreDataStack
+        // Basic User Interface initialization
+        return true
+    }
+    
+    func applicationWillTerminate(application: UIApplication) {
+        coreDataStack.saveContext()
+    }
 }
 
