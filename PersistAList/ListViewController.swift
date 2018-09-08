@@ -256,11 +256,11 @@ class ListViewController: UIViewController, UITableViewDataSource {
     }
     
     //handler
-    func handleTextFieldTextDidChangeNotification(_ notification: Notification) {
+    @objc func handleTextFieldTextDidChangeNotification(_ notification: Notification) {
         let textField = notification.object as! UITextField
         
         // Enforce a minimum length of >= 1 for secure text alerts.
-        AddAlertSaveAction!.isEnabled = textField.text?.characters.count >= 1
+        AddAlertSaveAction!.isEnabled = textField.text?.count >= 1
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {

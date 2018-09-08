@@ -61,14 +61,14 @@ class MainListTableViewController: UITableViewController {
         barShadow.shadowColor = UIColor.black
         barShadow.shadowOffset = CGSize(width: 0, height: 1)
         
-        let navBarAttributes = [NSShadowAttributeName: barShadow, NSFontAttributeName: navbarFont, NSForegroundColorAttributeName: UIColor.white]
+        let navBarAttributes = [NSAttributedStringKey.shadow: barShadow, NSAttributedStringKey.font: navbarFont, NSAttributedStringKey.foregroundColor: UIColor.white]
         
         self.navigationController?.navigationBar.titleTextAttributes = navBarAttributes
 
         
         let attributes = [
-            NSForegroundColorAttributeName: UIColor.white,
-            NSFontAttributeName : barFont
+            NSAttributedStringKey.foregroundColor: UIColor.white,
+            NSAttributedStringKey.font : barFont
         ]
         
         UIBarButtonItem.appearance().setTitleTextAttributes(attributes, for: UIControlState())
@@ -171,11 +171,11 @@ class MainListTableViewController: UITableViewController {
     }
     
     //handler
-    func handleTextFieldTextDidChangeNotification(_ notification: Notification) {
+    @objc func handleTextFieldTextDidChangeNotification(_ notification: Notification) {
         let textField = notification.object as! UITextField
         
         // Enforce a minimum length of >= 1 for secure text alerts.
-        AddAlertSaveAction!.isEnabled = textField.text?.characters.count >= 1
+        AddAlertSaveAction!.isEnabled = textField.text?.count >= 1
     }
     
     
