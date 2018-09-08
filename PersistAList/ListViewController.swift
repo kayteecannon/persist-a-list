@@ -8,6 +8,30 @@
 
 import UIKit
 import CoreData
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func >= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l >= r
+  default:
+    return !(lhs < rhs)
+  }
+}
+
 
 class ListViewController: UIViewController, UITableViewDataSource {
     
@@ -28,9 +52,9 @@ class ListViewController: UIViewController, UITableViewDataSource {
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        tableView.tintColor = UIColor.blackColor()
+        tableView.tintColor = UIColor.black
         segmentedControl.tintColor = UIColor.palPurpleColor()
     }
 
@@ -38,12 +62,12 @@ class ListViewController: UIViewController, UITableViewDataSource {
         super.didReceiveMemoryWarning()
     }
     
-    func updateViewWithList(list: List){
+    func updateViewWithList(_ list: List){
         title = list.name
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("itemCell", forIndexPath: indexPath)
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "itemCell", for: indexPath)
         
         // Set up the cell
             
@@ -51,15 +75,15 @@ class ListViewController: UIViewController, UITableViewDataSource {
                 
             case 0:   if let itemSet = list!.items {
                 let items = Array(itemSet) as! [Item]
-                let sortedItems = items.sort { $0.name < $1.name }
+                let sortedItems = items.sorted { $0.name < $1.name }
                 let item = sortedItems[indexPath.row]
                 
                 cell.textLabel?.text = item.name
                 
                 if item.isNeeded.boolValue {
-                    cell.accessoryType = .Checkmark
+                    cell.accessoryType = .checkmark
                 } else {
-                    cell.accessoryType = .None
+                    cell.accessoryType = .none
                 }
 
             }
@@ -69,11 +93,11 @@ class ListViewController: UIViewController, UITableViewDataSource {
                 let neededItems = items.filter({$0.isNeeded.boolValue})
                 
                 if neededItems.count > 0 {
-                    let sortedNeededItems = neededItems.sort { $0.name < $1.name }
+                    let sortedNeededItems = neededItems.sorted { $0.name < $1.name }
                     let item = sortedNeededItems[indexPath.row]
                     
                     cell.textLabel?.text = item.name
-                    cell.accessoryType = .None
+                    cell.accessoryType = .none
                 }
                 
                 break
@@ -86,7 +110,7 @@ class ListViewController: UIViewController, UITableViewDataSource {
         return cell
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         var numberOfRows = 0
         
@@ -112,23 +136,23 @@ class ListViewController: UIViewController, UITableViewDataSource {
     }
 
 
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAtIndexPath indexPath: IndexPath) {
         
-        if let itemCell = tableView.cellForRowAtIndexPath(indexPath) {
+        if let itemCell = tableView.cellForRow(at: indexPath) {
             
             switch (segmentedControl.selectedSegmentIndex) {
                 
             case 0:  if let itemSet = list!.items {
                 let items = Array(itemSet) as! [Item]
-                let sortedItems = items.sort { $0.name < $1.name }
+                let sortedItems = items.sorted { $0.name < $1.name }
                 let item = sortedItems[indexPath.row]
                 
-                if itemCell.accessoryType == .Checkmark {
+                if itemCell.accessoryType == .checkmark {
                     item.isNeeded = false
-                    itemCell.accessoryType = .None
+                    itemCell.accessoryType = .none
                 } else {
                      item.isNeeded = true
-                    itemCell.accessoryType = .Checkmark
+                    itemCell.accessoryType = .checkmark
                 }
                 }
                 
@@ -139,11 +163,11 @@ class ListViewController: UIViewController, UITableViewDataSource {
                     let neededItems = items.filter({$0.isNeeded.boolValue})
                     
                     if neededItems.count > 0 {
-                        let sortedNeededItems = neededItems.sort { $0.name < $1.name }
+                        let sortedNeededItems = neededItems.sorted { $0.name < $1.name }
                         let item = sortedNeededItems[indexPath.row]
                         item.isNeeded = false
-                        itemCell.accessoryType = .None
-                        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                        itemCell.accessoryType = .none
+                        tableView.deleteRows(at: [indexPath], with: .fade)
                     }
                 }
                 
@@ -154,11 +178,11 @@ class ListViewController: UIViewController, UITableViewDataSource {
             
             coreDataStack.saveContext()
             
-            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
         }
     }
 
-    @IBAction func segmentedControlTapped(sender: AnyObject) {
+    @IBAction func segmentedControlTapped(_ sender: AnyObject) {
         
         switch(segmentedControl.selectedSegmentIndex) {
             
@@ -176,33 +200,33 @@ class ListViewController: UIViewController, UITableViewDataSource {
         tableView.reloadData()
     }
 
-    @IBAction func addItemButtonTapped(sender: AnyObject) {
+    @IBAction func addItemButtonTapped(_ sender: AnyObject) {
         
-        let alertController = UIAlertController(title: "Add Item", message: nil, preferredStyle: .Alert)
+        let alertController = UIAlertController(title: "Add Item", message: nil, preferredStyle: .alert)
         
-        alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
+        alertController.addTextField { (textField: UITextField!) in
             textField.placeholder = "Enter item name"
-            textField.returnKeyType = .Done
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ListViewController.handleTextFieldTextDidChangeNotification), name: UITextFieldTextDidChangeNotification, object: textField)
+            textField.returnKeyType = .done
+            NotificationCenter.default.addObserver(self, selector: #selector(ListViewController.handleTextFieldTextDidChangeNotification), name: NSNotification.Name.UITextFieldTextDidChange, object: textField)
         }
         
         func removeTextFieldObserver() {
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: UITextFieldTextDidChangeNotification, object: alertController.textFields![0])
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UITextFieldTextDidChange, object: alertController.textFields![0])
         }
         
         // Create the actions.
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { action in
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { action in
             print("Cancel Button Pressed")
             removeTextFieldObserver()
         }
         
-        let saveAction = UIAlertAction(title: "Save", style: .Default) { action in
+        let saveAction = UIAlertAction(title: "Save", style: .default) { action in
             print("Saved")
             
             let nameTextField = alertController.textFields!.first
             
-            let entityItem = NSEntityDescription.entityForName("Item", inManagedObjectContext: self.coreDataStack.context)
-            let newItem = NSManagedObject(entity: entityItem!, insertIntoManagedObjectContext: self.coreDataStack.context)
+            let entityItem = NSEntityDescription.entity(forEntityName: "Item", in: self.coreDataStack.context)
+            let newItem = NSManagedObject(entity: entityItem!, insertInto: self.coreDataStack.context)
                 as! Item
             
             newItem.list = self.list!
@@ -217,7 +241,7 @@ class ListViewController: UIViewController, UITableViewDataSource {
         }
         
         // disable the 'save' button (otherAction) initially
-        saveAction.enabled = false
+        saveAction.isEnabled = false
         
         // save the other action to toggle the enabled/disabled state when the text changed.
         AddAlertSaveAction = saveAction
@@ -226,34 +250,34 @@ class ListViewController: UIViewController, UITableViewDataSource {
         alertController.addAction(cancelAction)
         alertController.addAction(saveAction)
         
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
         
         alertController.view.tintColor = UIColor.palAlertPurpleColor()
     }
     
     //handler
-    func handleTextFieldTextDidChangeNotification(notification: NSNotification) {
+    func handleTextFieldTextDidChangeNotification(_ notification: Notification) {
         let textField = notification.object as! UITextField
         
         // Enforce a minimum length of >= 1 for secure text alerts.
-        AddAlertSaveAction!.enabled = textField.text?.characters.count >= 1
+        AddAlertSaveAction!.isEnabled = textField.text?.characters.count >= 1
     }
 
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         
         switch (segmentedControl.selectedSegmentIndex) {
             
         case 0:  if let itemSet = list!.items {
             let items = Array(itemSet) as! [Item]
-            let sortedItems = items.sort { $0.name < $1.name }
+            let sortedItems = items.sorted { $0.name < $1.name }
             let item = sortedItems[indexPath.row]
             
-            coreDataStack.context.deleteObject(item)
+            coreDataStack.context.delete(item)
             
             coreDataStack.saveContext()
             
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            tableView.deleteRows(at: [indexPath], with: .fade)
         
             }
         case 1: if let itemSet = list!.items {
@@ -261,13 +285,13 @@ class ListViewController: UIViewController, UITableViewDataSource {
             let neededItems = items.filter({$0.isNeeded.boolValue})
             
             if neededItems.count > 0 {
-                let sortedNeededItems = neededItems.sort { $0.name < $1.name }
+                let sortedNeededItems = neededItems.sorted { $0.name < $1.name }
                 let item = sortedNeededItems[indexPath.row]
                 item.isNeeded = false
                 
                 coreDataStack.saveContext()
                 
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                tableView.deleteRows(at: [indexPath], with: .fade)
 
             }
             }

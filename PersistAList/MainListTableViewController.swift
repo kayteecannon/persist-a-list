@@ -8,15 +8,39 @@
 
 import UIKit
 import CoreData
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
+// FIXME: comparison operators with optionals were removed from the Swift Standard Libary.
+// Consider refactoring the code to use the non-optional operators.
+fileprivate func >= <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l >= r
+  default:
+    return !(lhs < rhs)
+  }
+}
+
 
 class MainListTableViewController: UITableViewController {
     
     var coreDataStack: CoreDataStack!
     
-    var fetchedResultsController: NSFetchedResultsController!
+    var fetchedResultsController: NSFetchedResultsController<NSFetchRequestResult>!
     
-    let navbarFont = UIFont(name: "AvenirNextCondensed-DemiBold", size: 22) ?? UIFont.systemFontOfSize(17)
-    let barFont = UIFont(name: "Avenir", size: 17.0) ?? UIFont.systemFontOfSize(17)
+    let navbarFont = UIFont(name: "AvenirNextCondensed-DemiBold", size: 22) ?? UIFont.systemFont(ofSize: 17)
+    let barFont = UIFont(name: "Avenir", size: 17.0) ?? UIFont.systemFont(ofSize: 17)
     
     var barShadow: NSShadow = NSShadow()
     
@@ -29,31 +53,31 @@ class MainListTableViewController: UITableViewController {
         // Do any additional setup after loading the view.
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
         self.navigationController?.navigationBar.barTintColor = UIColor.palPurpleColor()
         
-        barShadow.shadowColor = UIColor.blackColor()
+        barShadow.shadowColor = UIColor.black
         barShadow.shadowOffset = CGSize(width: 0, height: 1)
         
-        let navBarAttributes = [NSShadowAttributeName: barShadow, NSFontAttributeName: navbarFont, NSForegroundColorAttributeName: UIColor.whiteColor()]
+        let navBarAttributes = [NSShadowAttributeName: barShadow, NSFontAttributeName: navbarFont, NSForegroundColorAttributeName: UIColor.white]
         
         self.navigationController?.navigationBar.titleTextAttributes = navBarAttributes
 
         
         let attributes = [
-            NSForegroundColorAttributeName: UIColor.whiteColor(),
+            NSForegroundColorAttributeName: UIColor.white,
             NSFontAttributeName : barFont
         ]
         
-        UIBarButtonItem.appearance().setTitleTextAttributes(attributes, forState: UIControlState.Normal)
+        UIBarButtonItem.appearance().setTitleTextAttributes(attributes, for: UIControlState())
         
 
     }
     
     func initializeFetchedResultsController() {
-        let request = NSFetchRequest(entityName: "List")
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "List")
         let nameSort = NSSortDescriptor(key: "name", ascending: true)
         
         request.sortDescriptors = [nameSort]
@@ -69,57 +93,57 @@ class MainListTableViewController: UITableViewController {
         }
     }
     
-    func configureCell(cell: UITableViewCell, indexPath: NSIndexPath) {
-        let list = fetchedResultsController.objectAtIndexPath(indexPath) as! List
+    func configureCell(_ cell: UITableViewCell, indexPath: IndexPath) {
+        let list = fetchedResultsController.object(at: indexPath) as! List
         // Populate cell from the NSManagedObject instance
         cell.textLabel!.text = list.name
         
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("mainListCell", forIndexPath: indexPath) 
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "mainListCell", for: indexPath) 
         // Set up the cell
         configureCell(cell, indexPath: indexPath)
         
         return cell
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return fetchedResultsController.sections!.count
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let sectionInfo = fetchedResultsController.sections![section]
         return sectionInfo.numberOfObjects
     }
     
-    @IBAction func addButtonTapped(sender: AnyObject) {
+    @IBAction func addButtonTapped(_ sender: AnyObject) {
         
-        let alertController = UIAlertController(title: "Add List", message: nil, preferredStyle: .Alert)
+        let alertController = UIAlertController(title: "Add List", message: nil, preferredStyle: .alert)
         
-        alertController.addTextFieldWithConfigurationHandler { (textField: UITextField!) in
+        alertController.addTextField { (textField: UITextField!) in
             textField.placeholder = "Enter list name"
-            textField.returnKeyType = .Done
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(MainListTableViewController.handleTextFieldTextDidChangeNotification), name: UITextFieldTextDidChangeNotification, object: textField)
+            textField.returnKeyType = .done
+            NotificationCenter.default.addObserver(self, selector: #selector(MainListTableViewController.handleTextFieldTextDidChangeNotification), name: NSNotification.Name.UITextFieldTextDidChange, object: textField)
         }
         
         func removeTextFieldObserver() {
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: UITextFieldTextDidChangeNotification, object: alertController.textFields![0])
+            NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UITextFieldTextDidChange, object: alertController.textFields![0])
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { action in
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { action in
             print("Cancel Button Pressed")
             removeTextFieldObserver()
         }
         
-        let saveAction = UIAlertAction(title: "Save", style: .Default) { action in
+        let saveAction = UIAlertAction(title: "Save", style: .default) { action in
             print("Saved")
             
             let nameTextField = alertController.textFields!.first
             
             
             
-            let list = NSEntityDescription.insertNewObjectForEntityForName("List", inManagedObjectContext: self.coreDataStack.context) as! List
+            let list = NSEntityDescription.insertNewObject(forEntityName: "List", into: self.coreDataStack.context) as! List
             
             list.name = nameTextField!.text!
            
@@ -130,7 +154,7 @@ class MainListTableViewController: UITableViewController {
         }
         
         // disable the 'save' button (otherAction) initially
-        saveAction.enabled = false
+        saveAction.isEnabled = false
         
         // save the other action to toggle the enabled/disabled state when the text changed.
         AddAlertSaveAction = saveAction
@@ -139,7 +163,7 @@ class MainListTableViewController: UITableViewController {
         alertController.addAction(cancelAction)
         alertController.addAction(saveAction)
         
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
         
         alertController.view.tintColor = UIColor.palAlertPurpleColor()
         
@@ -147,22 +171,22 @@ class MainListTableViewController: UITableViewController {
     }
     
     //handler
-    func handleTextFieldTextDidChangeNotification(notification: NSNotification) {
+    func handleTextFieldTextDidChangeNotification(_ notification: Notification) {
         let textField = notification.object as! UITextField
         
         // Enforce a minimum length of >= 1 for secure text alerts.
-        AddAlertSaveAction!.enabled = textField.text?.characters.count >= 1
+        AddAlertSaveAction!.isEnabled = textField.text?.characters.count >= 1
     }
     
     
     // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
         let moc = coreDataStack.context
         
-        if editingStyle == .Delete {
-            let managedObject: NSManagedObject = fetchedResultsController.objectAtIndexPath(indexPath) as! NSManagedObject
-            moc.deleteObject(managedObject)
+        if editingStyle == .delete {
+            let managedObject: NSManagedObject = fetchedResultsController.object(at: indexPath) as! NSManagedObject
+            moc.delete(managedObject)
             
             coreDataStack.saveContext()
         }
@@ -187,17 +211,17 @@ class MainListTableViewController: UITableViewController {
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "toListView" {
             
             guard let indexPath = tableView.indexPathForSelectedRow else { return }
             
             // Fetch List
-            let list = self.fetchedResultsController.objectAtIndexPath(indexPath) as! List
+            let list = self.fetchedResultsController.object(at: indexPath) as! List
             
             // Fetch Destination View Controller
-            let listViewController = segue.destinationViewController as! ListViewController
+            let listViewController = segue.destination as! ListViewController
             
             // Configure View Controller
             listViewController.coreDataStack = coreDataStack
@@ -209,38 +233,38 @@ class MainListTableViewController: UITableViewController {
 
 extension MainListTableViewController: NSFetchedResultsControllerDelegate {
     
-    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange sectionInfo: NSFetchedResultsSectionInfo, atSectionIndex sectionIndex: Int, for type: NSFetchedResultsChangeType) {
         switch type {
-        case .Insert:
-            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        case .Delete:
-            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Fade)
-        case .Move:
+        case .insert:
+            tableView.insertSections(IndexSet(integer: sectionIndex), with: .fade)
+        case .delete:
+            tableView.deleteSections(IndexSet(integer: sectionIndex), with: .fade)
+        case .move:
             break
-        case .Update:
+        case .update:
             break
         }
     }
     
-    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
         switch type {
-        case .Insert:
-            tableView.insertRowsAtIndexPaths([newIndexPath!], withRowAnimation: .Fade)
-        case .Delete:
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-        case .Update:
-            configureCell(self.tableView.cellForRowAtIndexPath(indexPath!)!, indexPath: indexPath!)
-        case .Move:
-            tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
-            tableView.insertRowsAtIndexPaths([indexPath!], withRowAnimation: .Fade)
+        case .insert:
+            tableView.insertRows(at: [newIndexPath!], with: .fade)
+        case .delete:
+            tableView.deleteRows(at: [indexPath!], with: .fade)
+        case .update:
+            configureCell(self.tableView.cellForRow(at: indexPath!)!, indexPath: indexPath!)
+        case .move:
+            tableView.deleteRows(at: [indexPath!], with: .fade)
+            tableView.insertRows(at: [indexPath!], with: .fade)
         }
     }
     
-    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.endUpdates()
     }
 
